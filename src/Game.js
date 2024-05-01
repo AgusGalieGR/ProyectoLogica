@@ -13,7 +13,6 @@ function Game() {
   const [waiting, setWaiting] = useState(false);
   var content;
   const [pintar, setPintar] = useState(false);
-  var texto = '#';
   useEffect(() => {
     // Creation of the pengine server instance.    
     // This is executed just once, after the first render.    
@@ -30,28 +29,26 @@ function Game() {
         setRowsClues(response['RowClues']);
         setColsClues(response['ColumClues']);
         setPintar(true);
-        texto = '#';
       }
     });
-  }
-  let cambio = document.getElementById('cambio');
-    cambio.addEventListener('click', () => {
-    cambioDeEstado();
-  });
-  function cambioDeEstado(){
-    if(pintar){
-      setPintar(false);
-      texto = 'X';
-    }else{
-      setPintar(true);
-      texto = '#';
-    }
   }
   function handleClick(i, j) {
     // No action on click if we are waiting.
     if (waiting) {
       return;
     }
+  var cambio = document.getElementById('cambio');
+  cambio.addEventListener('click', () => {
+  cambioDeEstado();
+  });
+  
+  function cambioDeEstado(){
+    if(pintar){
+      setPintar(false);
+    }else{
+      setPintar(true);
+    }
+  }
     // Build Prolog query to make a move and get the new satisfacion status of the relevant clues.    
     const squaresS = JSON.stringify(grid).replaceAll('"_"', '_'); // Remove quotes for variables. squares = [["X",_,_,_,_],["X",_,"X",_,_],["X",_,_,_,_],["#","#","#",_,_],[_,_,"#","#","#"]]
     const rowsCluesS = JSON.stringify(rowsClues);
@@ -84,6 +81,7 @@ function Game() {
   } else {
     statusText = 'X';
   }
+  
   return (
     <div className="game">
       <Board
