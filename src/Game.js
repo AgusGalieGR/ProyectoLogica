@@ -91,7 +91,7 @@ function Game() {
         onClick={(i, j) => handleClick(i, j)}
       />
       <div id="cambio">
-        <button>{statusText}</button> 
+        <button className='button-content'>{statusText}</button> 
       </div>
     </div>
   );
