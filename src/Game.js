@@ -11,6 +11,7 @@ function Game() {
   const [rowsClues, setRowsClues] = useState(null);
   const [colsClues, setColsClues] = useState(null);
   const [waiting, setWaiting] = useState(false);
+  const [gridSolution, setGridSolution] = useState(false);
   var content;
   const [pintar, setPintar] = useState(false);
   useEffect(() => {
@@ -22,12 +23,13 @@ function Game() {
 
   function handleServerReady(instance) {
     pengine = instance;
-    const queryS = 'init(RowClues, ColumClues, Grid)';
+    const queryS = 'init(RowClues, ColumClues, Grid, GridSolution)';
     pengine.query(queryS, (success, response) => {
       if (success) {
         setGrid(response['Grid']);
         setRowsClues(response['RowClues']);
         setColsClues(response['ColumClues']);
+        setGridSolution(response['GridSolution']);
         setPintar(true);
       }
     });
@@ -68,8 +70,22 @@ function Game() {
       }
       setWaiting(false);
     });
+    //}
   }
   
+  let corte = false;
+  for(let filas=0;filas<grid[0].length && !corte;filas++){
+    for(let columnas=0;columnas<grid.length && !corte;columnas++){
+      if(grid[filas][columnas] !== gridSolution[filas][columnas]){
+        corte = true;
+      }else{
+        if(filas === grid[0].length-1 && columnas === grid.length-1 && !corte){
+          alert("Felicidades, ganaste");
+        }
+      }
+        
+    }
+  }
 
   if (!grid) {
     return null;
