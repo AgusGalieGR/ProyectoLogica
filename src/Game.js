@@ -11,7 +11,6 @@ function Game() {
   const [rowsClues, setRowsClues] = useState(null);
   const [colsClues, setColsClues] = useState(null);
   const [waiting, setWaiting] = useState(false);
-  const [status, setStatus] = useState(false);
   var content;
   const [pintar, setPintar] = useState(false);
   useEffect(() => {
@@ -23,7 +22,7 @@ function Game() {
 
   function handleServerReady(instance) {
     pengine = instance;
-    const queryS = 'init(RowClues, ColumClues, Grid, GridSolution)';
+    const queryS = 'init(RowClues, ColumClues, Grid)';
     pengine.query(queryS, (success, response) => {
       if (success) {
         setGrid(response['Grid']);
@@ -35,7 +34,7 @@ function Game() {
   }
   function handleClick(i, j) {
     // No action on click if we are waiting.
-    if (waiting && status === false) {
+    if (waiting) {
       return;
     }
   var cambio = document.getElementById('cambio');
@@ -61,7 +60,7 @@ function Game() {
     }else{
       content = '#'
     }
-    const queryS = `put("${content}", [${i},${j}], ${rowsCluesS}, ${colsCluesS}, ${squaresS}, ResGrid, RowSat, ColSat, ganar_juego(${rowsCluesS}, ${colsCluesS}, ResGrid))`; // queryS = put("#",[0,1],[], [],[["X",_,_,_,_],["X",_,"X",_,_],["X",_,_,_,_],["#","#","#",_,_],[_,_,"#","#","#"]], GrillaRes, FilaSat, ColSat)
+    const queryS = `put("${content}", [${i},${j}], ${rowsCluesS}, ${colsCluesS}, ${squaresS}, ResGrid, RowSat, ColSat))`; // queryS = put("#",[0,1],[], [],[["X",_,_,_,_],["X",_,"X",_,_],["X",_,_,_,_],["#","#","#",_,_],[_,_,"#","#","#"]], GrillaRes, FilaSat, ColSat)
     setWaiting(true);
     pengine.query(queryS, (success, response) => {
       if (success) {
