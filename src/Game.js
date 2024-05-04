@@ -12,6 +12,8 @@ function Game() {
   const [colsClues, setColsClues] = useState(null);
   const [waiting, setWaiting] = useState(false);
   const [status, setStatus] = useState(false);
+  var content;
+  const [pintar, setPintar] = useState(false);
 
   useEffect(() => {
     // Creation of the pengine server instance.    
@@ -28,6 +30,7 @@ function Game() {
         setGrid(response['Grid']);
         setRowsClues(response['RowClues']);
         setColsClues(response['ColumClues']);
+        setPintar(true);
       }
     });
   }
@@ -37,34 +40,53 @@ function Game() {
     if (waiting) {
       return;
     }
+    var cambio = document.getElementById('cambio');
+    cambio.addEventListener('click', () => {
+    cambioDeEstado();
+    });
+    
+    function cambioDeEstado(){
+      if(pintar){
+        setPintar(false);
+      }else{
+        setPintar(true);
+      }
+    }
     // Build Prolog query to make a move and get the new satisfacion status of the relevant clues.    
     const squaresS = JSON.stringify(grid).replaceAll('"_"', '_'); // Remove quotes for variables. squares = [["X",_,_,_,_],["X",_,"X",_,_],["X",_,_,_,_],["#","#","#",_,_],[_,_,"#","#","#"]]
-    const content = '#'; // Content to put in the clicked square.
     const rowsCluesS = JSON.stringify(rowsClues);
     const colsCluesS = JSON.stringify(colsClues);
-    //alert("Llego antes de query");
+    const pintarS = pintar;
+    //content = '#';
+    if(!pintarS){
+      content = 'X';
+    }else{
+      content = '#'
+    }
     const queryS = `put("${content}", [${i},${j}], ${rowsCluesS}, ${colsCluesS}, ${squaresS}, ResGrid, RowSat, ColSat), gameStatus(${rowsCluesS}, ResGrid, Status)`; // queryS = put("#",[0,1],[], [],[["X",_,_,_,_],["X",_,"X",_,_],["X",_,_,_,_],["#","#","#",_,_],[_,_,"#","#","#"]], GrillaRes, FilaSat, ColSat)
     setWaiting(true);
     
     pengine.query(queryS, (success, response) => {
-      //alert("paso query");
       if (success) {
-        //alert("success true");
         setGrid(response['ResGrid']);
         setStatus(response['Status']);
       }
       setWaiting(false);
     });
-    alert("Status: " + status);
   }
 
   if (!grid) {
     return null;
   }
-  /*if(status){
-    alert("Ganaste flaco");
-  }*/
-  const statusText = 'Keep playing!';
+  if(status){
+    alert("Ganaste");
+  }
+  let statusText;
+  if (pintar) {
+    statusText = '#';
+  } else {
+    statusText = 'X';
+  }
   return (
     <div className="game">
       <Board
@@ -73,8 +95,8 @@ function Game() {
         colsClues={colsClues}
         onClick={(i, j) => handleClick(i, j)}
       />
-      <div className="game-info">
-        {statusText}
+      <div id="cambio">
+        <button className='button-content'>{statusText}</button> 
       </div>
     </div>
   );

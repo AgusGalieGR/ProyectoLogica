@@ -43,44 +43,43 @@ gameStatus(RowsClues, NewGrid, Status) :-
 ganar_juego(PistasFila, Tablero, Status):- 
 	recursiva(PistasFila, Tablero, Status).
 
-recursiva([],[], true).
+recursiva([],[], Status):-
+	Status = true.
 recursiva(PF,T, Status):-
 	quedarse_con_primer_lista(T, FilaN, RestoT), % Lee y guarda la Fila N del tablero
 	quedarse_con_primer_elemento(PF, PistaFilaN, RestoPista), % Lee y guarda la Pista N de las pistas
 	primer_contador(PistaFilaN, FilaN, RestoT, RestoPista, Status). % Ahora das la fila y la pista de la fila N
 
-primer_contador([],[], _).
+primer_contador([], [], [], [],  _).
 primer_contador(PFb,[],RestoT, RestoPista, Status):-
 	segundo_contador(PFb, RestoT, RestoPista, Status). % Pasamos solo la pista y la lista de filasvamos a utilizar la listaFilas para contar
 primer_contador(PFa,F, RestoT, RestoPista, Status):-
 	nth0(0, F, Contenido), % Guardamos el contenido del elemento N en la fila
-	agregar_elemento(Contenido), % A medida de que va pasando por contenido los va guardando
+	assert(listaP(Contenido)), % A medida de que va pasando por contenido los va guardando
 	quedarse_con_primer_elemento(F, _, RestoF),  % Separamos el primer elemento de F del resto
 	primer_contador(PFa, RestoF, RestoT, RestoPista, Status). % Vuelve a guardar el contenido pero esta vez de la segunda cuadrilla
 
-segundo_contador([], _).
-segundo_contador(PFc, RestoT, RestoPista, Status):- %Bien Predicado no recursivo para verificar si la cantidad de pistas es igual 
+segundo_contador([], [], [], _).
+segundo_contador(PFc, RestoT, RestoPista, Status):- % Predicado no recursivo para verificar si la cantidad de pistas es igual 
 	contar_pintados(Cantidad),
-	retractall(listaFilas(_)),
+	%length(list, Longitud),
+	retractall(listaP),
 	(   Cantidad =\= PFc ->
-		%write('La cantidad de celdas pintadas no coincide con PFc.'),
-		%nl,
-		Status = false,
-		fail % Fallar para terminar el recorrido
-	;   Status = true,
-		recursiva(RestoPista, RestoT, Status) % Llamamos recursiva para el resto de las pistas y tablero
-).
+        Status = false
+        %fail % Fallar para terminar el recorrido
+    ;   recursiva(RestoPista, RestoT, Status) % Llamamos recursiva para el resto de las pistas y tablero
+	).
 
-contar_pintados(Cantidad):-% Predicado utilizado para contar la cantidad de # en listaFilas 
-	listaFilas(Lista),
-    count('#', Lista, Cantidad).
+contar_pintados(Cantidad):-
+    findall(Contenido, listaP(Contenido), ListaXd), % Aquí listaP es el predicado que contiene la lista
+    count('#', ListaXd, Cantidad).
 
 
 
-:- dynamic listaFilas/1.
+:- dynamic listaP/1.
 
 agregar_elemento(Contenido) :-
-	assert(listaFilas(Contenido)).
+	assert(listaP(Contenido)).
 
 % Caso base: si la lista de listas está vacía, el primer elemento y el resto son ambos vacíos.
 quedarse_con_primer_lista([], [], []).
