@@ -1,7 +1,7 @@
 :- module(proylcc,
 	[  
-		put/8,
-		gameStatus/3
+		put/9
+		%gameStatus/3
 	]).
 
 :-use_module(library(lists)).
@@ -24,7 +24,7 @@ replace(X, XIndex, Y, [Xi|Xs], [Xi|XsY]):-
 % put(+Content, +Pos, +RowsClues, +ColsClues, +Grid, -NewGrid, -RowSat, -ColSat).
 %
 
-put(Content, [RowN, ColN], _RowsClues, _ColsClues, Grid, NewGrid, 0, 0):-
+put(Content, [RowN, ColN], _RowsClues, _ColsClues, Grid, NewGrid, 0, 0, Status):-
 	% NewGrid is the result of replacing the row Row in position RowN of Grid by a new row NewRow (not yet instantiated).
 	replace(Row, RowN, NewRow, Grid, NewGrid),
 
@@ -36,10 +36,50 @@ put(Content, [RowN, ColN], _RowsClues, _ColsClues, Grid, NewGrid, 0, 0):-
 	Cell == Content
 		;
 	replace(_Cell, ColN, Content, Row, NewRow)).
-	%ganar_juego(RowsClues, NewGrid).
-gameStatus(RowsClues, NewGrid, Status) :-
-	ganar_juego(RowsClues, NewGrid, Status).
+	ganar_juego(RowsClues, ColsClues, NewGrid).
 
+ganar_juego(RowsClues, ColsClues, NewGrid):-
+	verificar_pistas_totales(RowsClues, NewGrid),
+	transpose(NewGrid, GridTranspose),
+	verificar_pistas_totales(ColsClues, GridTranspose).
+
+verificar_pistas_totales(Pistas, Tablero):-
+	quedarse_con_primer_lista(Pistas, PrimerPista, RestoPistas),
+	quedarse_con_primer_lista(Tablero, PrimerLista, RestoListas),
+	verificar_pistas(PrimerPista, PrimerLista).
+
+
+verificar_pistas(Pista, Lista):-
+	quedarse_con_primer_elemento(Pista, PrimerElementoPista, RestoElementosPistas),
+	quedarse_con_primer_elemento(Lista, PrimerElementoLista, RestoElementosListas),
+	es_pintado(PrimerElementoPista, PrimerElementoLista, RestoElementosPistas, RestoElementosListas).
+es_pintado(Pista, Elemento, RestoPistas, RestoElementos):-
+	(   Elemento =\= "#" ->
+        verificar_pistas(Pista, RestoElementos) % Descartamos el elemento que no nos sirve
+    ;   % Si si nos sirve:
+		Pista = Pista - 1,
+		(   Pista =\= 0 -> 
+			% Si no es 0, seguimos con la misma pista 
+        	verificar_pistas(Pista, RestoElementos) % Descartamos el elemento que no nos sirve
+    	;   % Si es 0, nos movemos a la otra pista:
+			verificar_pistas(RestoPistas, RestoElementos)
+		).
+	).
+% Creo que me falta el caso en el que no sea contiguo o que si lo sea 
+
+% Caso base: si la lista de listas está vacía, el primer elemento y el resto son ambos vacíos.
+quedarse_con_primer_lista([], [], []).
+
+% Caso recursivo: dividir la lista de listas en el primer elemento y el resto.
+quedarse_con_primer_lista([PrimeraLista|RestoListas], PrimeraLista, RestoListas).
+
+% Caso base: si la lista está vacía, el primer elemento y el resto son ambos vacíos.
+quedarse_con_primer_elemento([], [], []).
+
+% Caso recursivo: dividir la lista en el primer elemento y el resto.
+quedarse_con_primer_elemento([PrimerElemento|RestoElementos], PrimerElemento, RestoElementos).
+
+/*
 ganar_juego(PistasFila, Tablero, Status):- 
 	recursiva(PistasFila, Tablero, Status).
 
@@ -100,5 +140,7 @@ count(X, [X|T], N) :-
     N is N1 + 1.
 count(X, [_|T], N) :-
     count(X, T, N).
+*/
+
 
 
