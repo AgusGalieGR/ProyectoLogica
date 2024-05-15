@@ -46,6 +46,12 @@ ganar_juego(RowsClues, ColsClues, NewGrid):-
 
 verificar_pistas_totales([], []).
 
+verificar_pistas_totales(_Pistas, []):-
+	false.
+
+verificar_pistas_totales([], _Lista):-
+	false.
+
 verificar_pistas_totales(Pistas, Tablero):-
 	quedarse_con_primer_lista(Pistas, PrimerPista, RestoPistas), % Me quedo con la primer lista de pistas
 	quedarse_con_primer_lista(Tablero, PrimerLista, RestoListas), % Me quedo con la primer fila/columna del tablero
@@ -55,6 +61,8 @@ verificar_pistas_totales(Pistas, Tablero):-
 verificar_pistas([], []).
 
 verificar_pistas(_Pistas, []).
+verificar_pistas([],_Lista):-
+	false.
 
 verificar_pistas(Pista, Lista):-
 	quedarse_con_primer_elemento(Lista, Cuadricula, RestoElementosListas), % Separamos el primer cuadradito de los demas
@@ -72,7 +80,8 @@ verificar_pistas_aux([], [], []).
 
 verificar_pistas_aux(_Pistas, _RestoPista, []).
 
-verificar_pistas_aux([], [], _Lista).
+verificar_pistas_aux([], [], _Lista):-
+	false.
 
 verificar_pistas_aux(Pista, RestoPista, RestoLista):-
 	quedarse_con_primer_elemento(RestoLista, PrimerElementoLista, RestoElementosListas), % Separamos el primer cuadradito de los demas
