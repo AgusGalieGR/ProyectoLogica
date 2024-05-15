@@ -11,7 +11,7 @@ function Game() {
   const [rowsClues, setRowsClues] = useState(null);
   const [colsClues, setColsClues] = useState(null);
   const [waiting, setWaiting] = useState(false);
-  const [status, setStatus] = useState(false);
+  //const [status, setStatus] = useState(false);
   var content;
   const [pintar, setPintar] = useState(false);
 
@@ -63,13 +63,13 @@ function Game() {
     }else{
       content = '#'
     }
-    const queryS = `put("${content}", [${i},${j}], ${rowsCluesS}, ${colsCluesS}, ${squaresS}, ResGrid, RowSat, ColSat, Status)`; // queryS = put("#",[0,1],[], [],[["X",_,_,_,_],["X",_,"X",_,_],["X",_,_,_,_],["#","#","#",_,_],[_,_,"#","#","#"]], GrillaRes, FilaSat, ColSat)
+    const queryS = `put("${content}", [${i},${j}], ${rowsCluesS}, ${colsCluesS}, ${squaresS}, ResGrid, RowSat, ColSat)`; // queryS = put("#",[0,1],[], [],[["X",_,_,_,_],["X",_,"X",_,_],["X",_,_,_,_],["#","#","#",_,_],[_,_,"#","#","#"]], GrillaRes, FilaSat, ColSat)
     setWaiting(true);
     
     pengine.query(queryS, (success, response) => {
       if (success) {
         setGrid(response['ResGrid']);
-        setStatus(response['Status']);
+        //setStatus(response['Status']);
       }
       setWaiting(false);
     });
@@ -77,9 +77,6 @@ function Game() {
 
   if (!grid) {
     return null;
-  }
-  if(status){
-    alert("Ganaste");
   }
   let statusText;
   if (pintar) {
