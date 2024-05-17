@@ -46,12 +46,6 @@ ganar_juego(RowsClues, ColsClues, NewGrid):-
 
 verificar_pistas_totales([], []). % Juego se queda sin pistas y sin fila/col
 
-verificar_pistas_totales(_Pistas, []):- % Juego se queda sin fila/col pero todavia le quedaron pistas
-	false.
-
-verificar_pistas_totales([], _Lista). % Juego se queda sin pistas y todavia le queda una lista
-% Preguntar
-
 verificar_pistas_totales(Pistas, Tablero):-
 	quedarse_con_primer_lista(Pistas, PrimerPista, RestoPistas), % Me quedo con la primer lista de pistas
 	quedarse_con_primer_lista(Tablero, PrimerLista, RestoListas), % Me quedo con la primer fila/columna del tablero
@@ -60,18 +54,29 @@ verificar_pistas_totales(Pistas, Tablero):-
 
 verificar_pistas([], []). % Juego sin pistas y llego a la ultima cuadricula
 
-%verificar_pistas(_Pistas, []).
-verificar_pistas([],_Lista). % Juego sin pistas y quedan cuadriculas
 
-verificar_pistas(Pistas, []) :- % Verifica que la pista sea de longitud luego de la ultima cuadricula
-	length(Pistas, Longitud),
-	Longitud == 0.
+verificar_pistas([],Lista):- % Juego sin pistas y quedan cuadriculas
+	quedarse_con_primer_elemento(Lista, Cuadricula, RestoElementosListas), % Separamos el primer cuadradito de los demas
+	es_pintado([], Cuadricula, RestoElementosListas). % Verificamos si el primer cuadrado es pintado
+% Preguntar ambos
+verificar_pistas(Pistas, []) :- % Entra si las pistas son mayores a 0 y no queda lista
+	Pistas == [].
+	%false.
 
 % Hasta aca tiene sentido
 verificar_pistas(Pista, Lista):-
 	quedarse_con_primer_elemento(Lista, Cuadricula, RestoElementosListas), % Separamos el primer cuadradito de los demas
 	es_pintado(Pista, Cuadricula, RestoElementosListas). % Verificamos si el primer cuadrado es pintado
 
+es_pintado([], "#", ListaSinCuadricula):- % Si no quedan pistas y encuentra un # devuelve false
+	ListaSinCuadricula == [].
+	%false.
+es_pintado([], "_", ListaSinCuadricula):- % En cambio sigue leyendo la lista si no es #
+	verificar_pistas([], ListaSinCuadricula). % Devuelve la lista sin la cuadricula ya sabiendo que no es pintada
+
+es_pintado([], "X", ListaSinCuadricula):-
+	verificar_pistas([], ListaSinCuadricula). % Devuelve la lista sin la cuadricula ya sabiendo que no es pintada
+	
 es_pintado(Pista, "#", ListaSinCuadricula):-
 	quedarse_con_primer_elemento(Pista, PrimerElementoPista, RestoPistas), % Debido a que la pista puede ser doble la separamos
 	verificar_pistas_aux(PrimerElementoPista, RestoPistas, ListaSinCuadricula).  % Si es igual verifico si se cumple para todas las pistas contiguas 
@@ -95,21 +100,36 @@ verificar_pistas_aux([], [], Lista):-
 	verificar_pistas_aux([], [], RestoElementosListas). % Verifica el resto de la lista hasta que sea vacia
 
 verificar_pistas_aux(Pista, [], Lista):-
-	quedarse_con_primer_elemento(RestoLista, PrimerElementoLista, RestoElementosListas), % Separamos el primer cuadradito de los demas
+	quedarse_con_primer_elemento(Lista, PrimerElementoLista, RestoElementosListas), % Separamos el primer cuadradito de los demas
 	NuevoValor is Pista - 1, % Si no llego a 0 aun, decremento la pista en 1
 	% Ahora si el siguiente elemento vuelve a ser un # entonces seguimos hasta que la pista sea 0
 	PrimerElementoLista == "#",
 	verificar_pistas_aux(NuevoValor, [], RestoElementosListas).
 
 verificar_pistas_aux(Pista, [], []):-
-	false. % Corta la ejecucion si siguen habiendo pistas
+	Pista == [].
+	%false. % Corta la ejecucion si siguen habiendo pistas
 
-verificar_pistas_aux(Pista, RestoPista, RestoLista):-
+verificar_pistas_aux(Pista, RestoPista, RestoLista):- 
 	quedarse_con_primer_elemento(RestoLista, PrimerElementoLista, RestoElementosListas), % Separamos el primer cuadradito de los demas
-	NuevoValor is Pista - 1, % Si no llego a 0 aun, decremento la pista en 1
+	%NuevoValor is Pista - 1, % Si no llego a 0 aun, decremento la pista en 1
 	% Ahora si el siguiente elemento vuelve a ser un # entonces seguimos hasta que la pista sea 0
-	PrimerElementoLista == "#",
+	%PrimerElementoLista == "#", %Le molesta esto. % ACA SE TRABA
+	verificar(Pista, RestoPista, PrimerElementoLista, RestoElementosListas). % ACA SE TRABA
+	%verificar_pistas_aux(NuevoValor, RestoPista, RestoElementosListas).
+
+verificar(Pista, RestoPista, "#", RestoElementosListas):-
+	NuevoValor is Pista - 1,
 	verificar_pistas_aux(NuevoValor, RestoPista, RestoElementosListas).
+
+% Tal vez aca deberia guardar y pasar la pista original junto con la lista original.
+verificar(Pista, RestoPista, "X", RestoElementosListas):-
+	Pista == [],
+	RestoPista == [].
+
+verificar(Pista, RestoPista, "_", RestoElementosListas):-
+	Pista == [],
+	RestoPista == [].
 
 %Cambiar
 verificar_final_pista(RestoPista, RestoLista):-
