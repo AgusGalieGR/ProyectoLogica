@@ -10,12 +10,15 @@ function Game() {
   const [grid, setGrid] = useState(null);
   const [rowsClues, setRowsClues] = useState(null);
   const [colsClues, setColsClues] = useState(null);
-  // const [rowsCluesSat, setRowsClues] = pueden llenarla con ceros;
-  // const [colsCluesSat, setColsClues] = useState(null);
+  const [rowsSat, setRowsSat] = useState(null);
+  const [colsSat, setColsSat] = useState(null);
   const [waiting, setWaiting] = useState(false);
+  const [resultado, setResultado] = useState(null);
+
   //const [status, setStatus] = useState(false);
   var content;
   const [pintar, setPintar] = useState(false);
+  
 
   useEffect(() => {
     // Creation of the pengine server instance.    
@@ -26,12 +29,14 @@ function Game() {
 
   function handleServerReady(instance) {
     pengine = instance;
-    const queryS = 'init(RowClues, ColumClues, Grid)';
+    const queryS = 'init(RowClues, ColumClues, Grid, Sat)';
     pengine.query(queryS, (success, response) => {
       if (success) {
         setGrid(response['Grid']);
         setRowsClues(response['RowClues']);
         setColsClues(response['ColumClues']);
+        setRowsSat(response['Sat']);
+        setColsSat(response['Sat']);
         setPintar(true);
       }
     });
@@ -74,6 +79,9 @@ function Game() {
         //
         // 
         // TOMAR LOS VALORES DE COLSAT Y ROWSAT Y ACTUALIZAR LAS LISTAS DE REACT
+        rowsSat[i] = response['RowSat']; //Cuidao
+        colsSat[j] = response['ColSat'];
+        //setRowsSat()
         // ROWSAT se actualiza usando en indice i
         // COLSAT se actualiza usando el indice j
         // INMEDIATAMENTE DESPUES DE HACER EL PUT CHEQUEAR SI GANAMOS CON PROLOG 
@@ -82,8 +90,23 @@ function Game() {
       }
       setWaiting(false);
     });
+    const RowSatS = JSON.stringify(rowsSat);
+    const ColSatS = JSON.stringify(colsSat);
+    const queryS2 = `ganar_juego(${RowSatS}, ${ColSatS}, Resultado)`;
+    alert("Filas: "+RowSatS);
+    setWaiting(true);
+    
+    pengine.query(queryS2, (success, response) => {
+      if (success) {
+        setResultado(response['Resultado']);
+      }
+      setWaiting(false);
+    });
   }
 
+  if(resultado){
+    alert("Has ganado");
+  }
   if (!grid) {
     return null;
   }

@@ -1,4 +1,4 @@
-:- module(init, [ init/3 ]).
+:- module(init, [ init/4 ]).
 
 /**
  * init(-RowsClues, -ColsClues, Grid).
@@ -16,5 +16,6 @@ init(
  ["X", _ , _ , _ , _ ],		% Grid
  ["#","#","#", _ , _ ],
  [ _ , _ ,"#","#","#"]
-]
+],
+[0, 0, 0, 0, 0] %RowSat y ColSat
 ).
