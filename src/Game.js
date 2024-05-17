@@ -10,6 +10,8 @@ function Game() {
   const [grid, setGrid] = useState(null);
   const [rowsClues, setRowsClues] = useState(null);
   const [colsClues, setColsClues] = useState(null);
+  // const [rowsCluesSat, setRowsClues] = pueden llenarla con ceros;
+  // const [colsCluesSat, setColsClues] = useState(null);
   const [waiting, setWaiting] = useState(false);
   //const [status, setStatus] = useState(false);
   var content;
@@ -69,6 +71,13 @@ function Game() {
     pengine.query(queryS, (success, response) => {
       if (success) {
         setGrid(response['ResGrid']);
+        //
+        // 
+        // TOMAR LOS VALORES DE COLSAT Y ROWSAT Y ACTUALIZAR LAS LISTAS DE REACT
+        // ROWSAT se actualiza usando en indice i
+        // COLSAT se actualiza usando el indice j
+        // INMEDIATAMENTE DESPUES DE HACER EL PUT CHEQUEAR SI GANAMOS CON PROLOG 
+        // UTILIZANDO UN PREDICADO QUE TOME POR PARAMETRO LAS DOS LISTAS QUE TENEMOS EN REACT
         //setStatus(response['Status']);
       }
       setWaiting(false);
