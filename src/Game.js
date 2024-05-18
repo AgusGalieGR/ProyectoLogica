@@ -128,7 +128,12 @@ function Game() {
   } else {
     statusText = 'X';
   }
-
+let texto;
+if(resultado){
+  texto = "Felicidades, Ganaste!";
+}else{
+  texto = "Segui jugando!";
+}
   return (
     <div className="game">
       <Board
@@ -140,6 +145,9 @@ function Game() {
       />
       <div id="cambio">
         <button className='button-content'>{statusText}</button> 
+      </div>
+      <div>
+        <div>{texto}</div> 
       </div>
     </div>
   );
