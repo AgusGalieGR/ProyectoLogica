@@ -81,3 +81,10 @@ body {
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
   transition: 0.3s; 
 }
+
+.background_neutral{
+  background: #b9d6e0;
+}
+.background_correcto{
+  background: #09ff00;
+}

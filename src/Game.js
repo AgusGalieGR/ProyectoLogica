@@ -107,7 +107,7 @@ function Game() {
     const ColSatS = JSON.stringify(colsSat);
     const queryS2 = `ganar_juego(${RowSatS}, ${ColSatS}, Resultado)`;
     setWaiting(true);
-    
+    //cambiar_pistas_col(ColSatS);
     pengine.query(queryS2, (success, response) => {
       if (success) {
         setResultado(response['Resultado']);
@@ -119,7 +119,6 @@ function Game() {
     }
 
   }
-
   if (!grid) {
     return null;
   }
