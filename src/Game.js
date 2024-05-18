@@ -114,9 +114,6 @@ function Game() {
       }
       setWaiting(false);
     });
-    if(resultado){
-      alert("Has ganado");
-    }
 
   }
   if (!grid) {
