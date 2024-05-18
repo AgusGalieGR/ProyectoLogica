@@ -81,7 +81,7 @@ check_lista([_|RestToCheck], [], Sat):-
 */
 check_lista(ToCheck,[Clue|ResClues], Sat):-
 	check_pista_init(Clue, ToCheck, RestoListaReturn, Status),
-	Status is 1,
+	Status == 1,
 	check_lista(RestoListaReturn,ResClues, Sat).
 
 check_lista(_,[_|_], 0).

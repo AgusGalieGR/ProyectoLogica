@@ -79,7 +79,19 @@ function Game() {
         //
         // 
         // TOMAR LOS VALORES DE COLSAT Y ROWSAT Y ACTUALIZAR LAS LISTAS DE REACT
-        rowsSat[i] = response['RowSat']; //Cuidao
+        let newRowsSat =[]; // Crea una copia del estado actual
+        let RSat = response['RowSat']; // Actualiza la fila específica
+        for(let k=0;k< rowsSat.length;k++){
+          if(k == i){
+            newRowsSat[k] = RSat;
+            alert("Se actualizo RowSat: "+response['RowSat']);
+          }else{
+            newRowsSat[k] = rowsSat[k];
+          }
+          
+        }
+        setRowsSat(newRowsSat);
+        //rowsSat[i] = response['RowSat']; //Cuidao
         colsSat[j] = response['ColSat'];
         //setRowsSat()
         // ROWSAT se actualiza usando en indice i
