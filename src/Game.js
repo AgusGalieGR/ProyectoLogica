@@ -80,32 +80,32 @@ function Game() {
         // 
         // TOMAR LOS VALORES DE COLSAT Y ROWSAT Y ACTUALIZAR LAS LISTAS DE REACT
         let newRowsSat =[]; // Crea una copia del estado actual
+        let newColSat =[]; // Crea una copia del estado actual
         let RSat = response['RowSat']; // Actualiza la fila específica
+        let CSat = response['ColSat']; // Actualiza la col específica
+
         for(let k=0;k< rowsSat.length;k++){
           if(k == i){
             newRowsSat[k] = RSat;
-            alert("Se actualizo RowSat: "+response['RowSat']);
           }else{
             newRowsSat[k] = rowsSat[k];
           }
-          
+        }
+        for(let k=0;k< colsSat.length;k++){
+          if(k == i){
+            newColSat[k] = CSat;
+          }else{
+            newColSat[k] = rowsSat[k];
+          }
         }
         setRowsSat(newRowsSat);
-        //rowsSat[i] = response['RowSat']; //Cuidao
-        colsSat[j] = response['ColSat'];
-        //setRowsSat()
-        // ROWSAT se actualiza usando en indice i
-        // COLSAT se actualiza usando el indice j
-        // INMEDIATAMENTE DESPUES DE HACER EL PUT CHEQUEAR SI GANAMOS CON PROLOG 
-        // UTILIZANDO UN PREDICADO QUE TOME POR PARAMETRO LAS DOS LISTAS QUE TENEMOS EN REACT
-        //setStatus(response['Status']);
+        setColsSat(newColSat)
       }
       setWaiting(false);
     });
     const RowSatS = JSON.stringify(rowsSat);
     const ColSatS = JSON.stringify(colsSat);
     const queryS2 = `ganar_juego(${RowSatS}, ${ColSatS}, Resultado)`;
-    alert("Filas: "+RowSatS);
     setWaiting(true);
     
     pengine.query(queryS2, (success, response) => {
@@ -114,11 +114,11 @@ function Game() {
       }
       setWaiting(false);
     });
+    if(resultado){
+      alert("Has ganado");
+    }
   }
 
-  if(resultado){
-    alert("Has ganado");
-  }
   if (!grid) {
     return null;
   }
