@@ -85,14 +85,14 @@ function Game() {
         let CSat = response['ColSat']; // Actualiza la col específica
 
         for(let k=0;k< rowsSat.length;k++){
-          if(k == i){
+          if(k === i){
             newRowsSat[k] = RSat;
           }else{
             newRowsSat[k] = rowsSat[k];
           }
         }
         for(let k=0;k< colsSat.length;k++){
-          if(k == i){
+          if(k === i){
             newColSat[k] = CSat;
           }else{
             newColSat[k] = rowsSat[k];
@@ -117,6 +117,7 @@ function Game() {
     if(resultado){
       alert("Has ganado");
     }
+
   }
 
   if (!grid) {
@@ -128,6 +129,7 @@ function Game() {
   } else {
     statusText = 'X';
   }
+
   return (
     <div className="game">
       <Board
@@ -135,6 +137,7 @@ function Game() {
         rowsClues={rowsClues}
         colsClues={colsClues}
         onClick={(i, j) => handleClick(i, j)}
+        
       />
       <div id="cambio">
         <button className='button-content'>{statusText}</button> 
