@@ -134,6 +134,11 @@ check_pista(Pista, [PrimerElemento|RestoLista], RestoListaReturn, Status):-
 	Status is 0,
 	RestoListaReturn = RestoLista.
 
+check_pista(Pista, [], _, Status):-
+	Pista == 0,
+	Status is 1.
+
+
 
 
 
