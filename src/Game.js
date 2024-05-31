@@ -79,27 +79,18 @@ function Game() {
         //
         // 
         // TOMAR LOS VALORES DE COLSAT Y ROWSAT Y ACTUALIZAR LAS LISTAS DE REACT
-        let newRowsSat =[]; // Crea una copia del estado actual
-        let newColSat =[]; // Crea una copia del estado actual
+        let newRowsSat = [...rowsSat]; // Crea una copia del estado actual
+        let newColsSat =[...colsSat]; // Crea una copia del estado actual
         let RSat = response['RowSat']; // Actualiza la fila específica
         let CSat = response['ColSat']; // Actualiza la col específica
 
-        for(let k=0;k< rowsSat.length;k++){
-          if(k === i){
-            newRowsSat[k] = RSat;
-          }else{
-            newRowsSat[k] = rowsSat[k];
-          }
-        }
-        for(let k=0;k< colsSat.length;k++){
-          if(k === i){
-            newColSat[k] = CSat;
-          }else{
-            newColSat[k] = rowsSat[k];
-          }
-        }
+        newRowsSat[i] = RSat;
+        newColsSat[j] = CSat;
+
         setRowsSat(newRowsSat);
-        setColsSat(newColSat)
+        setColsSat(newColsSat);
+        
+        //colsClues[0].style.backgroundColor = "green";
       }
       setWaiting(false);
     });
@@ -111,6 +102,7 @@ function Game() {
     pengine.query(queryS2, (success, response) => {
       if (success) {
         setResultado(response['Resultado']);
+
       }
       setWaiting(false);
     });
@@ -137,6 +129,8 @@ if(resultado){
         grid={grid}
         rowsClues={rowsClues}
         colsClues={colsClues}
+        rowsSat = {rowsSat}
+        colsSat = {colsSat}
         onClick={(i, j) => handleClick(i, j)}
         
       />

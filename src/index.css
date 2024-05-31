@@ -53,7 +53,9 @@ body {
 .clue div {
   margin: 2px
 }
-
+.clueSat{
+  background-color: red;
+}
 .colClues .clue {
   flex-direction: column;
 }
