@@ -1,5 +1,6 @@
 :- module(proylcc,
 	[  
+		verificar_pre/6, %(Grid, RowsClues, ColsClues)
 		put/8,
 		ganar_juego/3
 	]).
@@ -23,6 +24,58 @@ replace(X, XIndex, Y, [Xi|Xs], [Xi|XsY]):-
 %
 % put(+Content, +Pos, +RowsClues, +ColsClues, +Grid, -NewGrid, -RowSat, -ColSat).
 %
+/*verificar_pre(Grid, RowsClues, ColsClues, RowSat, ColSat, LongFila, LongCol):-
+	%Entra solo si LongCol es mayor a 0
+	LongCol > 0,
+	obtener_N(Grid, LongFila, RowToCheck), % Hay que sacarlo (Hay que verificar todos)
+	obtener_N(RowsClues, LongFila, CluesToCheck),
+	check_lista(RowToCheck,CluesToCheck, RowSat),
+
+	transpose(Grid, GridTranspose), 
+
+	obtener_N(GridTranspose, LongCol, ColToCheck),
+	obtener_N(ColsClues, LongCol, CluesToCheck2),
+	check_lista(ColToCheck,CluesToCheck2, ColSat),
+	verificar_pre(Grid, RowsClues, ColsClues, RowSat, ColSat, LongFila, LongCol-1).
+
+verificar_pre(Grid, RowsClues, ColsClues, RowSat, ColSat, LongFila, LongCol):-
+	%Entra solo si LongCol es 0 y longFila es mayor a 0
+	LongFila > 0,
+	obtener_N(Grid, LongFila, RowToCheck), % Hay que sacarlo (Hay que verificar todos)
+	obtener_N(RowsClues, LongFila, CluesToCheck),
+	check_lista(RowToCheck,CluesToCheck, RowSat),
+
+	transpose(Grid, GridTranspose), 
+
+	obtener_N(GridTranspose, LongCol, ColToCheck),
+	obtener_N(ColsClues, LongCol, CluesToCheck2),
+	check_lista(ColToCheck,CluesToCheck2, ColSat),
+	verificar_pre(Grid, RowsClues, ColsClues, RowSat, ColSat, LongFila-1, 4).
+
+verificar_pre(Grid, RowsClues, ColsClues, RowSat, ColSat, LongFila, LongCol):-
+	%Entra solo si LongCol es 0 y longFila es 0
+	obtener_N(Grid, LongFila, RowToCheck), % Hay que sacarlo (Hay que verificar todos)
+	obtener_N(RowsClues, LongFila, CluesToCheck),
+	check_lista(RowToCheck,CluesToCheck, RowSat),
+
+	transpose(Grid, GridTranspose), 
+
+	obtener_N(GridTranspose, LongCol, ColToCheck),
+	obtener_N(ColsClues, LongCol, CluesToCheck2),
+	check_lista(ColToCheck,CluesToCheck2, ColSat).
+	%verificar_pre(Grid, RowsClues, ColsClues, RowSat, ColSat, 0, 0).
+*/
+verificar_pre(Grid, [RowN, ColN], RowsClues, ColsClues, RowSat, ColSat):-
+	obtener_N(Grid, RowN, RowToCheck), 
+	obtener_N(RowsClues, RowN, CluesToCheck),
+	check_lista(RowToCheck, CluesToCheck, RowSat),
+
+	transpose(Grid, GridTranspose), 
+
+	obtener_N(GridTranspose, ColN, ColToCheck),
+	obtener_N(ColsClues, ColN, CluesToCheck2),
+	check_lista(ColToCheck,CluesToCheck2, ColSat).
+
 
 put(Content, [RowN, ColN], RowsClues, ColsClues, Grid, NewGrid, RowSat, ColSat):-
 	% NewGrid is the result of replacing the row Row in position RowN of Grid by a new row NewRow (not yet instantiated).
@@ -37,9 +90,9 @@ put(Content, [RowN, ColN], RowsClues, ColsClues, Grid, NewGrid, RowSat, ColSat):
 		;
 	replace(_Cell, ColN, Content, Row, NewRow)
 	),
-	obtener_N(NewGrid,RowN,RowToCheck), 
-	obtener_N(RowsClues,RowN,CluesToCheck),
-	check_lista(RowToCheck,CluesToCheck, RowSat),
+	obtener_N(NewGrid, RowN, RowToCheck), 
+	obtener_N(RowsClues, RowN, CluesToCheck),
+	check_lista(RowToCheck, CluesToCheck, RowSat),
 
 	transpose(NewGrid, GridTranspose), 
 

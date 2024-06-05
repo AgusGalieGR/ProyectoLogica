@@ -35,11 +35,43 @@ function Game() {
         setGrid(response['Grid']);
         setRowsClues(response['RowClues']);
         setColsClues(response['ColumClues']);
-        setRowsSat(response['Sat']);
-        setColsSat(response['Sat']);
+        setRowsSat(response['Sat']); //HAY QUE CAMBIARLO
+        setColsSat(response['Sat']); //HAY QUE CAMBIARLO
         setPintar(true);
       }
+      
     });
+    const squaresS = JSON.stringify(grid).replaceAll('"_"', '_'); // Remove quotes for variables. squares = [["X",_,_,_,_],["X",_,"X",_,_],["X",_,_,_,_],["#","#","#",_,_],[_,_,"#","#","#"]]
+    const rowsCluesS = JSON.stringify(rowsClues);
+    const colsCluesS = JSON.stringify(colsClues);
+   /* grid.forEach(fila => {
+      fila.forEach(square => {
+        
+      });
+    });*/
+
+    for(let i=0;i<5;i++){
+      for(let j=0;j<5;j++){
+      const queryS2 = `verificar_pre(${squaresS}, [${i},${j}], ${rowsCluesS}, ${colsCluesS}, RowSat, ColSat)`;
+      alert("entro en ["+i+"], ["+j+"]");    
+      pengine.query(queryS2, (success, response) => {
+            if (success) {
+            // TOMAR LOS VALORES DE COLSAT Y ROWSAT Y ACTUALIZAR LAS LISTAS DE REACT
+            let newRowsSat = [...rowsSat]; // Crea una copia del estado actual
+            let newColsSat =[...colsSat]; // Crea una copia del estado actual
+            let RSat = response['RowSat']; // Actualiza la fila específica
+            let CSat = response['ColSat']; // Actualiza la col específica
+      
+            newRowsSat[i] = RSat;
+            newColsSat[j] = CSat;
+
+            setRowsSat(newRowsSat);
+            setColsSat(newColsSat);            
+            }
+          });
+      }
+    }
+    
   }
 
   function handleClick(i, j) {

@@ -5,8 +5,6 @@ import Clue from './Clue';
 function Board({ grid, rowsClues, colsClues, rowsSat, colsSat, onClick }) {
     const numOfRows = grid.length;
     const numOfCols = grid[0].length;
-    const rows = rowsClues.length;
-    const cols = colsClues.length;
     return (
         <div className="vertical">
             <div
