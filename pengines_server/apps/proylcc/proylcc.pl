@@ -1,6 +1,7 @@
 :- module(proylcc,
 	[  
-		verificar_pre/6, %(Grid, RowsClues, ColsClues)
+		%verificar_pre/6, 
+		ganar_anticipado/5,
 		put/8,
 		ganar_juego/3
 	]).
@@ -64,7 +65,7 @@ verificar_pre(Grid, RowsClues, ColsClues, RowSat, ColSat, LongFila, LongCol):-
 	obtener_N(ColsClues, LongCol, CluesToCheck2),
 	check_lista(ColToCheck,CluesToCheck2, ColSat).
 	%verificar_pre(Grid, RowsClues, ColsClues, RowSat, ColSat, 0, 0).
-*/
+
 verificar_pre(Grid, [RowN, ColN], RowsClues, ColsClues, RowSat, ColSat):-
 	obtener_N(Grid, RowN, RowToCheck), 
 	obtener_N(RowsClues, RowN, CluesToCheck),
@@ -75,6 +76,51 @@ verificar_pre(Grid, [RowN, ColN], RowsClues, ColsClues, RowSat, ColSat):-
 	obtener_N(GridTranspose, ColN, ColToCheck),
 	obtener_N(ColsClues, ColN, CluesToCheck2),
 	check_lista(ColToCheck,CluesToCheck2, ColSat).
+*/
+ganar_anticipado(Grid, [RowN, ColN], RowsClues, ColsClues, Status):- %Comienzo
+	obtener_N(Grid, RowN, RowToCheck), 
+	obtener_N(RowsClues, RowN, CluesToCheck),
+	check_lista(RowToCheck, CluesToCheck, Status),
+	Status ==1,
+	ganar_anticipado2(Grid, [RowN+1, 0], RowsClues, Status), %Pasan filas
+	
+	transpose(Grid, GridTranspose), 
+
+	obtener_N(GridTranspose, ColN, ColToCheck),
+	obtener_N(ColsClues, ColN, CluesToCheck2),
+	check_lista(ColToCheck,CluesToCheck2, Status),
+	
+	ganar_anticipado2(GridTranspose, [0, ColN+1], ColsClues, Status). %Pasan cols
+	
+ganar_anticipado2(Grid, [RowN, 0], RowsClues, Status):-
+	RowN<4,
+	obtener_N(Grid, RowN, RowToCheck), 
+	obtener_N(RowsClues, RowN, CluesToCheck),
+	check_lista(RowToCheck, CluesToCheck, Status),
+	Status ==1,
+	ganar_anticipado2(Grid, [RowN+1, 0], RowsClues, Status).
+
+ganar_anticipado2(Grid2, [0, ColN], ColsClues, Status):-
+	ColN<4,
+	obtener_N(Grid2, ColN, ColToCheck),
+	obtener_N(ColsClues, ColN, CluesToCheck2),
+	check_lista(ColToCheck,CluesToCheck2, Status),
+	Status ==1,
+	ganar_anticipado2(Grid2, [0, ColN+1], ColsClues, Status).
+
+ganar_anticipado2(_, [_, _], _, 0). %Final malo xd
+
+ganar_anticipado2(Grid, [RowN, _], RowsClues, Status):- %Final bueno filas
+	obtener_N(Grid, RowN, RowToCheck), 
+	obtener_N(RowsClues, RowN, CluesToCheck),
+	check_lista(RowToCheck, CluesToCheck, Status),
+	Status == 1.
+
+ganar_anticipado2(Grid2, [0, ColN], ColsClues, Status):- %Final bueno cols
+	obtener_N(Grid2, ColN, ColToCheck),
+	obtener_N(ColsClues, ColN, CluesToCheck2),
+	check_lista(ColToCheck,CluesToCheck2, Status),
+	Status ==1. 
 
 
 put(Content, [RowN, ColN], RowsClues, ColsClues, Grid, NewGrid, RowSat, ColSat):-
