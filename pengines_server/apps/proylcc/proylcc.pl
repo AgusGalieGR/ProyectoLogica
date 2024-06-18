@@ -89,9 +89,9 @@ ganar_anticipado2(Grid, RowN, RowsClues, Status):-
 	RowN<4,
 	obtener_N(Grid, RowN, RowToCheck), 
 	obtener_N(RowsClues, RowN, CluesToCheck),
-	check_lista(RowToCheck, CluesToCheck, 1),
-	NewRowN is RowN+1,
-	ganar_anticipado2(Grid, NewRowN, RowsClues, Status).
+	check_lista(RowToCheck, CluesToCheck, 1).
+	%NewRowN is RowN+1,
+	%ganar_anticipado2(Grid, NewRowN, RowsClues, Status).
 
 /*ganar_anticipado2(Grid, RowN, RowsClues, Status):- %Final bueno filas
 	obtener_N(Grid, RowN, RowToCheck), 
@@ -106,9 +106,7 @@ ganar_anticipado2(Grid, RowN, RowsClues, Status):- %Final bueno filas
 	Status is 0,
 	ganar_anticipado2(Grid, RowN, RowsClues, 0).
 
-ganar_anticipado2(_, _, _, Status):-
-	Status is 0,
-	Status = 0.
+ganar_anticipado2(_, _, _, 0).
 
 
 
