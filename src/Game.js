@@ -75,18 +75,7 @@ function Game() {
     if (waiting) {
       return;
     }
-    var cambio = document.getElementById('cambio');
-    cambio.addEventListener('click', () => {
-    cambioDeEstado();
-    });
     
-    function cambioDeEstado(){
-      if(pintar){
-        setPintar(false);
-      }else{
-        setPintar(true);
-      }
-    }
     // Build Prolog query to make a move and get the new satisfacion status of the relevant clues.    
     const squaresS = JSON.stringify(grid).replaceAll('"_"', '_'); // Remove quotes for variables. squares = [["X",_,_,_,_],["X",_,"X",_,_],["X",_,_,_,_],["#","#","#",_,_],[_,_,"#","#","#"]]
     const rowsCluesS = JSON.stringify(rowsClues);
@@ -134,10 +123,26 @@ function Game() {
       }
       setWaiting(false);
     });
-
+  
   }
   if (!grid) {
     return null;
+  }
+
+  var cambio = document.getElementById('cambio');
+  if(cambio != null){
+    
+      cambio.addEventListener('click', () => {
+      cambioDeEstado();
+    });
+  }
+
+  function cambioDeEstado(){
+    if(pintar){
+      setPintar(false);
+    }else{
+      setPintar(true);
+    }
   }
   let statusText;
   if (pintar) {
@@ -145,12 +150,12 @@ function Game() {
   } else {
     statusText = 'X';
   }
-let texto;
-if(resultado){
-  texto = "Felicidades, Ganaste!";
-}else{
-  texto = "Segui jugando!";
-}
+  let texto;
+  if(resultado){
+    texto = "Felicidades, Ganaste!";
+  }else{
+    texto = "Segui jugando!";
+  }
   return (
     <div className="game">
       <Board
