@@ -167,8 +167,16 @@ function Game() {
         onClick={(i, j) => handleClick(i, j)}
         
       />
-      <div id="cambio">
-        <button className='button-content'>{statusText}</button> 
+      <div className="button-container">
+        <div id="cambio">
+          <button className='button-content'>{statusText}</button> 
+        </div>
+        <div id="solucion">
+          <button className='button-solution'>Completar</button> 
+        </div>
+        <div id="solucion-especifica">
+          <button className='button-specific-solution'>Pista</button> 
+        </div>
       </div>
       <div>
         <div>{texto}</div> 

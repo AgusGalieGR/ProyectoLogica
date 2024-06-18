@@ -64,10 +64,30 @@ body {
   display: flex;
   flex-direction: column; 
 }
-
+.button-container{
+  display: flex;
+  grid-auto-flow: column;
+  gap: 10px;
+  align-items:flex-start;
+}
 .game-info {
   margin-left: 20px;
 }
+.button-specific-solution{
+  background-color: #e5ff00; 
+  border: none; 
+  padding: 10px 25px; 
+  text-align: center;
+  text-decoration: none;
+  display: inline-block; 
+  font-size: 16px; 
+  margin: 4px 2px; 
+  cursor: pointer; 
+  border-radius: 10px; 
+  box-shadow: 0 4px 8px 0 rgb(0, 0, 0);
+  transition: 0.3s; 
+}
+
 .button-content {
   background-color: #272447; 
   border: none; 
@@ -83,7 +103,21 @@ body {
   box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
   transition: 0.3s; 
 }
-
+.button-solution{
+  background-color: #00bb09; 
+  border: none; 
+  color: white; 
+  padding: 10px 25px; 
+  text-align: center;
+  text-decoration: none;
+  display: inline-block; 
+  font-size: 16px; 
+  margin: 4px 2px; 
+  cursor: pointer; 
+  border-radius: 10px; 
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s; 
+}
 .background_neutral{
   background: #b9d6e0;
 }
