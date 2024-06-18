@@ -78,49 +78,39 @@ verificar_pre(Grid, [RowN, ColN], RowsClues, ColsClues, RowSat, ColSat):-
 	check_lista(ColToCheck,CluesToCheck2, ColSat).
 */
 ganar_anticipado(Grid, [RowN, ColN], RowsClues, ColsClues, Status):- %Comienzo
-	obtener_N(Grid, RowN, RowToCheck), 
-	obtener_N(RowsClues, RowN, CluesToCheck),
-	check_lista(RowToCheck, CluesToCheck, Status),
-	Status ==1,
-	ganar_anticipado2(Grid, [RowN+1, 0], RowsClues, Status), %Pasan filas
+	ganar_anticipado2(Grid, RowN, RowsClues, 1), %Pasan filas
 	
 	transpose(Grid, GridTranspose), 
 
-	obtener_N(GridTranspose, ColN, ColToCheck),
-	obtener_N(ColsClues, ColN, CluesToCheck2),
-	check_lista(ColToCheck,CluesToCheck2, Status),
+	ganar_anticipado2(GridTranspose, ColN, ColsClues, 1), %Pasan cols
+	Status is 1.
 	
-	ganar_anticipado2(GridTranspose, [0, ColN+1], ColsClues, Status). %Pasan cols
-	
-ganar_anticipado2(Grid, [RowN, 0], RowsClues, Status):-
+ganar_anticipado2(Grid, RowN, RowsClues, Status):-
 	RowN<4,
 	obtener_N(Grid, RowN, RowToCheck), 
 	obtener_N(RowsClues, RowN, CluesToCheck),
-	check_lista(RowToCheck, CluesToCheck, Status),
-	Status ==1,
-	ganar_anticipado2(Grid, [RowN+1, 0], RowsClues, Status).
+	check_lista(RowToCheck, CluesToCheck, 1),
+	NewRowN is RowN+1,
+	ganar_anticipado2(Grid, NewRowN, RowsClues, Status).
 
-ganar_anticipado2(Grid2, [0, ColN], ColsClues, Status):-
-	ColN<4,
-	obtener_N(Grid2, ColN, ColToCheck),
-	obtener_N(ColsClues, ColN, CluesToCheck2),
-	check_lista(ColToCheck,CluesToCheck2, Status),
-	Status ==1,
-	ganar_anticipado2(Grid2, [0, ColN+1], ColsClues, Status).
-
-ganar_anticipado2(_, [_, _], _, 0). %Final malo xd
-
-ganar_anticipado2(Grid, [RowN, _], RowsClues, Status):- %Final bueno filas
+/*ganar_anticipado2(Grid, RowN, RowsClues, Status):- %Final bueno filas
 	obtener_N(Grid, RowN, RowToCheck), 
 	obtener_N(RowsClues, RowN, CluesToCheck),
 	check_lista(RowToCheck, CluesToCheck, Status),
-	Status == 1.
+	Status is 1.	
+*/
+ganar_anticipado2(Grid, RowN, RowsClues, Status):- %Final bueno filas
+	obtener_N(Grid, RowN, RowToCheck), 
+	obtener_N(RowsClues, RowN, CluesToCheck),
+	check_lista(RowToCheck, CluesToCheck, 0),
+	Status is 0,
+	ganar_anticipado2(Grid, RowN, RowsClues, 0).
 
-ganar_anticipado2(Grid2, [0, ColN], ColsClues, Status):- %Final bueno cols
-	obtener_N(Grid2, ColN, ColToCheck),
-	obtener_N(ColsClues, ColN, CluesToCheck2),
-	check_lista(ColToCheck,CluesToCheck2, Status),
-	Status ==1. 
+ganar_anticipado2(_, _, _, Status):-
+	Status is 0,
+	Status = 0.
+
+
 
 
 put(Content, [RowN, ColN], RowsClues, ColsClues, Grid, NewGrid, RowSat, ColSat):-
