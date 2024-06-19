@@ -8,6 +8,7 @@ function Game() {
 
   // State
   const [grid, setGrid] = useState(null);
+  const [gridAux, setGridAux] = useState(null);
   const [rowsClues, setRowsClues] = useState(null);
   const [colsClues, setColsClues] = useState(null);
   const [rowsSat, setRowsSat] = useState(null);
@@ -29,10 +30,11 @@ function Game() {
 
   function handleServerReady(instance) {
     pengine = instance;
-    const queryS = 'init(RowClues, ColumClues, Grid, Sat)';
+    const queryS = 'init(RowClues, ColumClues, Grid, GridAux, Sat)';
     pengine.query(queryS, (success, response) => {
       if (success) {
         setGrid(response['Grid']);
+        setGridAux(response['GridAux']);
         setRowsClues(response['RowClues']);
         setColsClues(response['ColumClues']);
         setRowsSat(response['Sat']); //HAY QUE CAMBIARLO
