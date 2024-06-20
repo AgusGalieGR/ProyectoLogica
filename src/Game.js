@@ -40,7 +40,7 @@ function Game() {
         setRowsSat(response['Sat']); //HAY QUE CAMBIARLO
         setColsSat(response['Sat']); //HAY QUE CAMBIARLO
         setPintar(true);
-        setContent2('#');
+        //setContent2('#');
 
 
       }
