@@ -18,7 +18,7 @@ function Game() {
 
   //const [status, setStatus] = useState(false);
   var content;
-  const [pintar, setPintar] = useState(false);
+  const [pintar, setPintar] = useState(true);
   const [revelar, setRevelar] = useState(false);
 
   useEffect(() => {
@@ -39,7 +39,7 @@ function Game() {
         setColsClues(response['ColumClues']);
         setRowsSat(response['Sat']); //HAY QUE CAMBIARLO
         setColsSat(response['Sat']); //HAY QUE CAMBIARLO
-        setPintar(true);
+        //setPintar(true);
         //setContent2('#');
 
 
@@ -85,7 +85,7 @@ function Game() {
     
     //content = '#';
     if(revelar){
-      funcionRevelar(i,j);
+      funcionRevelar(i,j, rowsCluesS, colsCluesS, squaresS);
       
     }else{
       if(!pintar){
@@ -93,32 +93,8 @@ function Game() {
       }else{
         content = "#";
       }
+      put(i, j, content, rowsCluesS, colsCluesS, squaresS);
     }
-    
-    const queryS = `put("${content}", [${i},${j}], ${rowsCluesS}, ${colsCluesS}, ${squaresS}, ResGrid, RowSat, ColSat)`; // queryS = put("#",[0,1],[], [],[["X",_,_,_,_],["X",_,"X",_,_],["X",_,_,_,_],["#","#","#",_,_],[_,_,"#","#","#"]], GrillaRes, FilaSat, ColSat)
-    setWaiting(true);
-    
-    pengine.query(queryS, (success, response) => {
-      if (success) {
-        setGrid(response['ResGrid']);
-        //
-        // 
-        // TOMAR LOS VALORES DE COLSAT Y ROWSAT Y ACTUALIZAR LAS LISTAS DE REACT
-        let newRowsSat = [...rowsSat]; // Crea una copia del estado actual
-        let newColsSat =[...colsSat]; // Crea una copia del estado actual
-        let RSat = response['RowSat']; // Actualiza la fila específica
-        let CSat = response['ColSat']; // Actualiza la col específica
-
-        newRowsSat[i] = RSat;
-        newColsSat[j] = CSat;
-
-        setRowsSat(newRowsSat);
-        setColsSat(newColsSat);
-        
-        //colsClues[0].style.backgroundColor = "green";
-      }
-      setWaiting(false);
-    });
     const RowSatS = JSON.stringify(rowsSat);
     const ColSatS = JSON.stringify(colsSat);
     const queryS2 = `ganar_juego(${RowSatS}, ${ColSatS}, Resultado)`;
@@ -132,7 +108,7 @@ function Game() {
       setWaiting(false);
     });
 
-    function funcionRevelar(i,j){
+    function funcionRevelar(i,j, colsCluesS, rowsCluesS, squaresS){
       const squaresAux = JSON.stringify(gridAux).replaceAll('"_"', '_'); // Remove quotes for variables. squares = [["X",_,_,_,_],["X",_,"X",_,_],["X",_,_,_,_],["#","#","#",_,_],[_,_,"#","#","#"]]
       const queryContent = `show([${i},${j}], ${squaresAux}, ContentAux)`; // queryS = put("#",[0,1],[], [],[["X",_,_,_,_],["X",_,"X",_,_],["X",_,_,_,_],["#","#","#",_,_],[_,_,"#","#","#"]], GrillaRes, FilaSat, ColSat)
       setWaiting(true);
@@ -145,17 +121,43 @@ function Game() {
             setPintar(false);
           }*/
         }
-        
         setWaiting(false);
+
+        put(i, j, content, colsCluesS, rowsCluesS, squaresS); 
       });
       
-      
     }
+  }
+
+  function put(i, j, content, rowsCluesS, colsCluesS, squaresS){
+    const queryS = `put("${content}", [${i},${j}], ${rowsCluesS}, ${colsCluesS}, ${squaresS}, ResGrid, RowSat, ColSat)`; // queryS = put("#",[0,1],[], [],[["X",_,_,_,_],["X",_,"X",_,_],["X",_,_,_,_],["#","#","#",_,_],[_,_,"#","#","#"]], GrillaRes, FilaSat, ColSat)
+        setWaiting(true);
+        
+        pengine.query(queryS, (success, response) => {
+          if (success) {
+            setGrid(response['ResGrid']);
+            //
+            // 
+            // TOMAR LOS VALORES DE COLSAT Y ROWSAT Y ACTUALIZAR LAS LISTAS DE REACT
+            let newRowsSat = [...rowsSat]; // Crea una copia del estado actual
+            let newColsSat =[...colsSat]; // Crea una copia del estado actual
+            let RSat = response['RowSat']; // Actualiza la fila específica
+            let CSat = response['ColSat']; // Actualiza la col específica
+
+            newRowsSat[i] = RSat;
+            newColsSat[j] = CSat;
+
+            setRowsSat(newRowsSat);
+            setColsSat(newColsSat);
+            
+            //colsClues[0].style.backgroundColor = "green";
+          }
+          setWaiting(false);
+        });
   }
   if (!grid) {
     return null;
   }
-
   var cambio = document.getElementById('cambio');
   if(cambio != null){
     
@@ -165,6 +167,7 @@ function Game() {
   }
 
   function cambioDeEstado(){
+    setRevelar(false);
     if(pintar){
       setPintar(false);
     }else{
