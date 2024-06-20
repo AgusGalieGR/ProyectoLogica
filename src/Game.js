@@ -19,7 +19,7 @@ function Game() {
   //const [status, setStatus] = useState(false);
   var content;
   const [pintar, setPintar] = useState(false);
-  
+  const [revelar, setRevelar] = useState(false);
 
   useEffect(() => {
     // Creation of the pengine server instance.    
@@ -40,6 +40,7 @@ function Game() {
         setRowsSat(response['Sat']); //HAY QUE CAMBIARLO
         setColsSat(response['Sat']); //HAY QUE CAMBIARLO
         setPintar(true);
+        setContent2('#');
 
 
       }
@@ -77,18 +78,23 @@ function Game() {
     if (waiting) {
       return;
     }
-    
-    // Build Prolog query to make a move and get the new satisfacion status of the relevant clues.    
+      // Build Prolog query to make a move and get the new satisfacion status of the relevant clues.    
     const squaresS = JSON.stringify(grid).replaceAll('"_"', '_'); // Remove quotes for variables. squares = [["X",_,_,_,_],["X",_,"X",_,_],["X",_,_,_,_],["#","#","#",_,_],[_,_,"#","#","#"]]
     const rowsCluesS = JSON.stringify(rowsClues);
     const colsCluesS = JSON.stringify(colsClues);
-    const pintarS = pintar;
+    
     //content = '#';
-    if(!pintarS){
-      content = 'X';
+    if(revelar){
+      funcionRevelar(i,j);
+      
     }else{
-      content = '#'
+      if(!pintar){
+        content = "X";
+      }else{
+        content = "#";
+      }
     }
+    
     const queryS = `put("${content}", [${i},${j}], ${rowsCluesS}, ${colsCluesS}, ${squaresS}, ResGrid, RowSat, ColSat)`; // queryS = put("#",[0,1],[], [],[["X",_,_,_,_],["X",_,"X",_,_],["X",_,_,_,_],["#","#","#",_,_],[_,_,"#","#","#"]], GrillaRes, FilaSat, ColSat)
     setWaiting(true);
     
@@ -125,7 +131,26 @@ function Game() {
       }
       setWaiting(false);
     });
-  
+
+    function funcionRevelar(i,j){
+      const squaresAux = JSON.stringify(gridAux).replaceAll('"_"', '_'); // Remove quotes for variables. squares = [["X",_,_,_,_],["X",_,"X",_,_],["X",_,_,_,_],["#","#","#",_,_],[_,_,"#","#","#"]]
+      const queryContent = `show([${i},${j}], ${squaresAux}, ContentAux)`; // queryS = put("#",[0,1],[], [],[["X",_,_,_,_],["X",_,"X",_,_],["X",_,_,_,_],["#","#","#",_,_],[_,_,"#","#","#"]], GrillaRes, FilaSat, ColSat)
+      setWaiting(true);
+      pengine.query(queryContent, (success, response) => {
+        if (success) {
+          content = response['ContentAux'];
+          /*if(contentAux == "#"){
+            setPintar(true);
+          }else{
+            setPintar(false);
+          }*/
+        }
+        
+        setWaiting(false);
+      });
+      
+      
+    }
   }
   if (!grid) {
     return null;
@@ -145,6 +170,34 @@ function Game() {
     }else{
       setPintar(true);
     }
+  }
+
+  var solucion = document.getElementById('solucion');
+  if(solucion != null){
+    
+      solucion.addEventListener('click', () => {
+      cambioDeGrilla();
+    });
+  }
+
+  function cambioDeGrilla(){
+    
+  }
+
+  var solucion_especifica = document.getElementById('solucion-especifica');
+  if(solucion_especifica != null){
+    
+    solucion_especifica.addEventListener('click', () => {
+      revelarCelda();
+    });
+  }
+
+  function revelarCelda(){
+    if(revelar){
+      setRevelar(false);
+    }else{
+      setRevelar(true);
+    } 
   }
   let statusText;
   if (pintar) {

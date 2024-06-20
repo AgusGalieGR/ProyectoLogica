@@ -3,7 +3,8 @@
 		%verificar_pre/6, 
 		ganar_anticipado/5,
 		put/8,
-		ganar_juego/3
+		ganar_juego/3,
+		show/3
 	]).
 
 :-use_module(library(lists)).
@@ -57,7 +58,20 @@ ganar_anticipado2(Grid, RowN, RowsClues, Status):- %Final bueno filas
 ganar_anticipado2(_, _, _, 0).
 
 
+show([RowN, ColN], GridAux, Content):-
+	obtener_N(GridAux, RowN, RowToCheck),
+	%transpose(GridAux, GridAuxTranspose),
+	%obtener_N(GridAuxTranspose, ColN, ColToCheck),
+	encontrar(RowToCheck, ColN, NewContent),
+	Content = NewContent.
 
+encontrar([_PrimerElemento|Resto], N, NContent):-
+	Number is N - 1,
+	Number > -1,
+	encontrar(Resto, Number, NContent).
+encontrar([PrimerElemento|_Resto], N, NContent):-
+	N == 0,
+	NContent = PrimerElemento.
 
 put(Content, [RowN, ColN], RowsClues, ColsClues, Grid, NewGrid, RowSat, ColSat):-
 	% NewGrid is the result of replacing the row Row in position RowN of Grid by a new row NewRow (not yet instantiated).
