@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PengineClient from './PengineClient';
 import Board from './Board';
+import BoardSolution from './BoardSolution';
 
 let pengine;
 
@@ -216,7 +217,8 @@ function Game() {
   }
   return (
     <div className="game">
-      <Board
+      <div className='boards'>
+        <Board
         grid={grid}
         rowsClues={rowsClues}
         colsClues={colsClues}
@@ -224,7 +226,14 @@ function Game() {
         colsSat = {colsSat}
         onClick={(i, j) => handleClick(i, j)}
         
-      />
+        />
+
+        <BoardSolution
+          grid={gridAux}
+          
+        />
+      </div>
+      
       <div className="button-container">
         <div id="cambio">
           <button className='button-content'>{statusText}</button> 
