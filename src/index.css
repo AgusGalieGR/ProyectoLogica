@@ -124,3 +124,13 @@ body {
 .background_correcto{
   background: #09ff00;
 }
+.boards{
+  display: flex;
+  
+}
+.boardSolutionInactivo{
+  opacity: 0;
+}
+.boardSolutionActivo{
+  opacity: 100;
+}

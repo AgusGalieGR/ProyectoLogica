@@ -16,6 +16,7 @@ function Game() {
   const [colsSat, setColsSat] = useState(null);
   const [waiting, setWaiting] = useState(false);
   const [resultado, setResultado] = useState(null);
+  const [completar, setCompletar] = useState(false);
 
   //const [status, setStatus] = useState(false);
   var content;
@@ -179,13 +180,18 @@ function Game() {
   var solucion = document.getElementById('solucion');
   if(solucion != null){
     
-      solucion.addEventListener('click', () => {
+    solucion.addEventListener('click', () => {
       cambioDeGrilla();
     });
   }
 
   function cambioDeGrilla(){
-    
+    if(!completar){
+      setCompletar(true);
+    }else{
+      setCompletar(false);
+      
+    }
   }
 
   var solucion_especifica = document.getElementById('solucion-especifica');
@@ -218,20 +224,26 @@ function Game() {
   return (
     <div className="game">
       <div className='boards'>
-        <Board
-        grid={grid}
-        rowsClues={rowsClues}
-        colsClues={colsClues}
-        rowsSat = {rowsSat}
-        colsSat = {colsSat}
-        onClick={(i, j) => handleClick(i, j)}
-        
-        />
+        <div className='boardOG'>
+          <Board
+            grid={grid}
+            rowsClues={rowsClues}
+            colsClues={colsClues}
+            rowsSat = {rowsSat}
+            colsSat = {colsSat}
+            onClick={(i, j) => handleClick(i, j)}
+            
+          />
+        </div>
+        <div className={completar ? 'boardSolutionActivo' : 'boardSolutionInactivo'}> 
+          <BoardSolution
+            grid={gridAux}
+            
+          />
+        </div>
 
-        <BoardSolution
-          grid={gridAux}
-          
-        />
+
+        
       </div>
       
       <div className="button-container">
