@@ -162,8 +162,60 @@ check_pista(Pista, [PrimerElemento|RestoLista], RestoListaReturn, Status):-
 check_pista(Pista, [], _, Status):-
 	Pista == 0,
 	Status is 1.
+/*
+% Predicado principal que genera una lista de longitud 5 con la condición de pista
+generar_lista(Pista, Lista, CantGrillas) :-
+    %length(Lista, 5),              % La lista debe tener longitud 5
+    sublista_pista(Pista, SubListaPista),  % Genera la sublista con los '#' consecutivos
+    %insertar_sublista(Lista, SubListaPista), % Inserta la sublista en la lista
+    completar_lista(SubListaPista, Lista).         % Completa la lista con 'X'
 
+% Predicado que genera una sublista de longitud N con '#'
+sublista_pista(N, SubListaPista) :-
+    length(SubListaPista, N),
+    maplist(=('#'), SubListaPista).
 
+probar_variantes(Sublista, Lista, ListaDeListas, CantGrillas, Acumulador):- %Para nada terminado
+	length(SublistaPista, LongSublista),
+	Acumulador<=CantGrillas-LongSublista,
+	Acumulador is 0,
+	completar_final([Lista|Sublista], CantGrillas-LongSublista),
+	ListaDeListas = Lista,
+	probar_variantes(Sublista, ListaDeListas, CantGrillas, Acumulador+1).
 
+completar_final(ListaAux, N):-
+	N>0,
+	completar([ListaAux|'X'], N-1).
+completar_final(Lista, 0).
 
+probar_variantes(Sublista, Lista, CantGrillas, Acumulador):-
+	length(SublistaPista, LongSublista),
+	Acumulador<=CantGrillas-LongSublista,
+	completar_final([Lista|Sublista], CantGrillas-LongSublista).
 
+completar_final(ListaAux, N):-
+	N>0,
+	completar([ListaAux|'X'], N-1).
+completar_final(Lista, 0).
+
+% Predicado para insertar la sublista en la lista principal
+%insertar_sublista(Lista, SubListaPista) :-
+ %   append(Prefix, Suffix, Lista),   % Divide la lista en prefijo y sufijo
+  %  append(Prefix, SubListaPista, TempList), % Inserta la sublista en el prefijo
+   % append(TempList, Suffix, Lista). % Combina todo para formar la lista final
+% Caso base: Cuando la lista a completar está vacía, no hay más elementos que agregar.
+completar_lista([], []).
+
+% Caso donde el primer elemento de la lista es '#', lo dejamos igual.
+completar_lista(['#'|T], ['#'|Resto]) :-
+    completar_lista(T, Resto).
+
+% Caso donde el primer elemento de la lista es 'X', lo reemplazamos por 'X' en la lista resultado.
+completar_lista(['X'|T], ['X'|Resto]) :-
+    completar_lista(T, Resto).
+
+% Caso donde el primer elemento de la lista no es ni '#' ni 'X', lo dejamos igual.
+completar_lista([X|T], [_|Resto]) :-
+    X \= '#', X \= 'X',
+    completar_lista(T, Resto).
+*/
