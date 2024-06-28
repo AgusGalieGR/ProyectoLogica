@@ -162,60 +162,87 @@ check_pista(Pista, [PrimerElemento|RestoLista], RestoListaReturn, Status):-
 check_pista(Pista, [], _, Status):-
 	Pista == 0,
 	Status is 1.
-/*
-% Predicado principal que genera una lista de longitud 5 con la condición de pista
-generar_lista(Pista, Lista, CantGrillas) :-
-    %length(Lista, 5),              % La lista debe tener longitud 5
-    sublista_pista(Pista, SubListaPista),  % Genera la sublista con los '#' consecutivos
-    %insertar_sublista(Lista, SubListaPista), % Inserta la sublista en la lista
-    completar_lista(SubListaPista, Lista).         % Completa la lista con 'X'
 
-% Predicado que genera una sublista de longitud N con '#'
-sublista_pista(N, SubListaPista) :-
-    length(SubListaPista, N),
-    maplist(=('#'), SubListaPista).
+sol_linea(ListaFoC, Pista, LS):-
+	crear_lista_sol_FoC(ListaFoC, Pista, LS).
 
-probar_variantes(Sublista, Lista, ListaDeListas, CantGrillas, Acumulador):- %Para nada terminado
-	length(SublistaPista, LongSublista),
-	Acumulador<=CantGrillas-LongSublista,
-	Acumulador is 0,
-	completar_final([Lista|Sublista], CantGrillas-LongSublista),
-	ListaDeListas = Lista,
-	probar_variantes(Sublista, ListaDeListas, CantGrillas, Acumulador+1).
 
-completar_final(ListaAux, N):-
-	N>0,
-	completar([ListaAux|'X'], N-1).
-completar_final(Lista, 0).
+crear_lista_sol_FoC([],[], _).
 
-probar_variantes(Sublista, Lista, CantGrillas, Acumulador):-
-	length(SublistaPista, LongSublista),
-	Acumulador<=CantGrillas-LongSublista,
-	completar_final([Lista|Sublista], CantGrillas-LongSublista).
+crear_lista_sol_FoC([PrimerElemento|[]], [], [ListaSolucion|"X"]):-
+	PrimerElemento \== "#".
 
-completar_final(ListaAux, N):-
-	N>0,
-	completar([ListaAux|'X'], N-1).
-completar_final(Lista, 0).
+crear_lista_sol_FoC([PrimerElemento|RestToCheck], [], [ListaSolucion|"X"]):-
+	PrimerElemento \== "#",
+	crear_lista_sol_FoC(RestToCheck, [], ListaSolucion).
 
-% Predicado para insertar la sublista en la lista principal
-%insertar_sublista(Lista, SubListaPista) :-
- %   append(Prefix, Suffix, Lista),   % Divide la lista en prefijo y sufijo
-  %  append(Prefix, SubListaPista, TempList), % Inserta la sublista en el prefijo
-   % append(TempList, Suffix, Lista). % Combina todo para formar la lista final
-% Caso base: Cuando la lista a completar está vacía, no hay más elementos que agregar.
-completar_lista([], []).
+crear_lista_sol_FoC([_|RestToCheck], [], ListaSolucion):-
+	change_pista(0, RestToCheck, RestoDeResto, ListaSolucion),
+	crear_lista_sol_FoC(RestoDeResto, [], ListaSolucion).
 
-% Caso donde el primer elemento de la lista es '#', lo dejamos igual.
-completar_lista(['#'|T], ['#'|Resto]) :-
-    completar_lista(T, Resto).
+crear_lista_sol_FoC(ToCheck,[Clue|ResClues], ListaARetornar):-
+	change_pista_init(Clue, ToCheck, RestoListaReturn, ListaSol),
+	my_append(ListaSol, ListaSolucion, ListaARetornar),
+	crear_lista_sol_FoC(RestoListaReturn,ResClues, ListaSolucion).
 
-% Caso donde el primer elemento de la lista es 'X', lo reemplazamos por 'X' en la lista resultado.
-completar_lista(['X'|T], ['X'|Resto]) :-
-    completar_lista(T, Resto).
+my_append([], Cs, Cs).
+my_append([A|As],Bs, [A|Cs]):-
+	my_append(As,Bs,Cs).
+crear_lista_sol_FoC(_,[_|_]).
 
-% Caso donde el primer elemento de la lista no es ni '#' ni 'X', lo dejamos igual.
-completar_lista([X|T], [_|Resto]) :-
-    X \= '#', X \= 'X',
-    completar_lista(T, Resto).
-*/
+change_pista_init(Clue, [PrimerElemento|RestoLista], RestoListaReturn, ListaSolucion):-
+	PrimerElemento == "#",
+	NewClue is Clue-1,
+	my_append(ListaSolucion, ["#"], LS),
+	change_pista(NewClue, RestoLista, RestoListaReturn, LS).
+
+change_pista_init(Clue, [PrimerElemento|RestoLista], RestoListaReturn, [ListaSolucion|"#"]):-
+	PrimerElemento \== "#",
+	PrimerElemento \== "X",
+	NewClue is Clue-1,
+	NewClue > -1,
+	change_pista(NewClue, RestoLista, RestoListaReturn, ListaSolucion).
+
+change_pista_init(Clue, [PrimerElemento|RestoLista], RestoListaReturn, [ListaSolucion|"X"]):-
+	PrimerElemento \== "#",
+	PrimerElemento \== "X",
+	change_pista(Clue, RestoLista, RestoListaReturn, ListaSolucion).
+
+change_pista_init(Clue, [PrimerElemento|RestoLista], RestoListaReturn, [ListaSolucion|"X"]):-
+	PrimerElemento == "X",
+	change_pista(Clue, RestoLista, RestoListaReturn, ListaSolucion).
+
+change_pista(Pista, [PrimerElemento|RestoLista], RestoListaReturn, [ListaSolucion|"#"]):-
+	PrimerElemento == "#",
+	PistaAux is Pista - 1,
+	PistaAux > -1,
+	change_pista(PistaAux, RestoLista, RestoListaReturn, ListaSolucion). 
+
+change_pista(Pista, [PrimerElemento|RestoLista], RestoListaReturn, [ListaSolucion|"X"]):-
+	PrimerElemento == "X",
+	change_pista(Pista, RestoLista, RestoListaReturn, ListaSolucion). 
+
+change_pista(Pista, [PrimerElemento|RestoLista], RestoListaReturn, [ListaSolucion|"#"]):-
+	PrimerElemento \== "#",
+	PrimerElemento \== "X",
+	NewClue is Pista-1,
+	NewClue > -1,
+	change_pista(NewClue, RestoLista, RestoListaReturn, ListaSolucion).
+
+
+change_pista(Pista, [PrimerElemento|RestoLista], RestoListaReturn, [_|"X"]):-
+	PrimerElemento \== "#",
+	PrimerElemento \== "X",
+	Pista == 0,
+	RestoListaReturn = RestoLista.	
+
+change_pista(Pista, [PrimerElemento|RestoLista], RestoListaReturn, [_|"X"]):-
+	PrimerElemento == "X",
+	Pista == 0,
+	RestoListaReturn = RestoLista.	
+
+change_pista(Pista, [], _, _):-
+	Pista == 0.
+
+
+
