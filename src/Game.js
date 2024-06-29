@@ -97,12 +97,23 @@ function Game() {
       }
       put(i, j, content, rowsCluesS, colsCluesS, squaresS);
     }
-    
-    
+    const RowSatS = JSON.stringify(rowsSat);
+    const ColSatS = JSON.stringify(colsSat);
+    const queryS2 = `ganar_juego(${RowSatS}, ${ColSatS}, Resultado)`;
+    setWaiting(true);
+    //cambiar_pistas_col(ColSatS);
+    pengine.query(queryS2, (success, response) => {
+      if (success) {
+        setResultado(response['Resultado']);
+
+      }
+      setWaiting(false);
+    });
+
     function funcionRevelar(i,j, colsCluesS, rowsCluesS, squaresS){
       const squaresAux = JSON.stringify(gridAux).replaceAll('"_"', '_'); // Remove quotes for variables. squares = [["X",_,_,_,_],["X",_,"X",_,_],["X",_,_,_,_],["#","#","#",_,_],[_,_,"#","#","#"]]
       const queryContent = `show([${i},${j}], ${squaresAux}, ContentAux)`; // queryS = put("#",[0,1],[], [],[["X",_,_,_,_],["X",_,"X",_,_],["X",_,_,_,_],["#","#","#",_,_],[_,_,"#","#","#"]], GrillaRes, FilaSat, ColSat)
-      
+      setWaiting(true);
       pengine.query(queryContent, (success, response) => {
         if (success) {
           content = response['ContentAux'];
@@ -112,7 +123,7 @@ function Game() {
             setPintar(false);
           }*/
         }
-        
+        setWaiting(false);
 
         put(i, j, content, colsCluesS, rowsCluesS, squaresS); 
       });
@@ -122,6 +133,7 @@ function Game() {
 
   function put(i, j, content, rowsCluesS, colsCluesS, squaresS){
     const queryS = `put("${content}", [${i},${j}], ${rowsCluesS}, ${colsCluesS}, ${squaresS}, ResGrid, RowSat, ColSat)`; // queryS = put("#",[0,1],[], [],[["X",_,_,_,_],["X",_,"X",_,_],["X",_,_,_,_],["#","#","#",_,_],[_,_,"#","#","#"]], GrillaRes, FilaSat, ColSat)
+        setWaiting(true);
         
         pengine.query(queryS, (success, response) => {
           if (success) {
@@ -139,23 +151,11 @@ function Game() {
 
             setRowsSat(newRowsSat);
             setColsSat(newColsSat);
-            ganar_juego(newRowsSat, newColsSat);
+            
             //colsClues[0].style.backgroundColor = "green";
           }
+          setWaiting(false);
         });
-  }
-  function ganar_juego(r, n){
-    const RowSatS = JSON.stringify(r);
-    const ColSatS = JSON.stringify(n);
-    const queryS2 = `ganar_juego(${RowSatS}, ${ColSatS}, Resultado)`;
-    setWaiting(true);
-    //cambiar_pistas_col(ColSatS);
-    pengine.query(queryS2, (success, response) => {
-      if (success) {
-        setResultado(response['Resultado']);
-      }
-      setWaiting(false);
-    });
   }
   if (!grid) {
     return null;

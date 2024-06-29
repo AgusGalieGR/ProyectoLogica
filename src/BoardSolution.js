@@ -1,5 +1,6 @@
 import React from 'react';
 import Square from './Square';
+import Clue from './Clue';
 
 function BoardSolution({grid}) {
     const numOfRows = grid.length;
